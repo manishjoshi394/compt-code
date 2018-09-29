@@ -165,6 +165,7 @@ public:
     {
         while(id[x] != x)
         {
+            id[x] = id[id[x]];     // path compression
             x = id[x];
         }
         return x;
@@ -173,12 +174,14 @@ public:
     {
         return m_count;
     }
-    void union(ll x, ll y)
+    void join(ll x, ll y)
     {
         ll xRoot = find(x);
         ll yRoot = find(y);
         if (xRoot == yRoot)
             return;
+
+        // ranking the trees by sizes
         if (size[xRoot] < size[yRoot])
         {
             id[xRoot] = yRoot;
