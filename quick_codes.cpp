@@ -22,7 +22,7 @@ typedef unordered_map<ll, ll> STll;
 
 
 /***********************************************************
-* DFS
+* DFS                                @author: manishjoshi394
 ************************************************************/
 vector<ll> *adj;
 bool *marked;
@@ -70,7 +70,7 @@ int main ()
 
 
 /******************************************************************************
-* Number theory utilities
+* Number theory utilities                           @author: manishjoshi394
 ******************************************************************************/
 
 ll myPow(ll x, ll p)
@@ -100,9 +100,41 @@ ll dig(ll n)
 
 
 
+/***********************************************************
+* MODULAR ARITHMETIC                 @author: manishjoshi394
+***********************************************************/
+const ll MOD = 1e9 + 9;
+
+ll myPow(ll base, ll exp, ll mod = MOD)
+{
+    ll result = 1;
+    while (exp > 0)
+    {
+        if (exp & 1) result = (result * base) % mod;
+        base = (base * base) % mod;
+        exp >>= 1;
+    }
+    return result;
+}
+
+ll modInverse(ll a, ll m = MOD)
+{
+    return myPow(a, m - 2, m);
+}
+
+ll mul(ll a, ll b, ll mod = MOD)
+{
+    return ((a % mod) * (b % mod)) % mod;
+}
+
+ll add(ll a, ll b, ll mod = MOD)
+{
+    return ((a % mod) + (b % mod) + mod) % mod;
+}
+
 
 /*************************************************************
-* EDGE
+* EDGE                                  @author: manishjoshi394
 **************************************************************/
 class Edge
 {
@@ -142,7 +174,7 @@ public :
 
 
 /*************************************************************************
-* UNION FIND - WITH RANK AND PATH-COMPRESSION
+* UNION FIND - WITH RANK AND PATH-COMPRESSION       @author: manishjoshi394
 *************************************************************************/
 class UnionFind
 {
@@ -198,3 +230,107 @@ public:
         return find(v) == find(w);
     }
 };
+
+
+
+
+/**********************************************************************************
+* MATRIX DATA TYPE WITH IN-BUILT '*', '^', '=', '<<' OPERATORS   @author: manishjoshi394
+**********************************************************************************/
+class Matrix
+{
+    ///"Writing this class was Awesome ! DATED: 10 Oct-2018, 21:57 @NIT-UK(Strike Days)"///
+    vector<vector<ll>> arr; ;
+public:
+    static ll MOD;
+    const int N;
+    const int M;
+
+    Matrix(const int _N, const int _M, ll init = 0)
+    : arr(_N, vector<ll>(_M, init)), N(_N), M(_M) {}
+
+    Matrix(const int N) : Matrix(N, N) { ; };
+
+    vector<ll>& operator[](int i)
+    {
+        return arr[i];
+    }
+
+    Matrix operator*(const Matrix& that)
+    {
+        assert(this->M == that.N);
+        Matrix product(this->N, that.M, 0);
+        FOR(i, 0, this->N)
+        {
+            FOR(j, 0, that.M)
+            {
+                FOR(r, 0, this->M)
+                {
+                    product[i][j] += this->arr[i][r] * that.arr[r][j];
+                    product[i][j] %= Matrix::MOD;
+                }
+            }
+        }
+        return product;
+    }
+
+    Matrix operator^(ll exp)
+    {
+        Matrix base = *(this);
+        Matrix result = Matrix::identity(base.N);
+        while (exp > 0)
+        {
+            if (exp & 1) result = result * base;
+            base = (base * base);
+            exp >>= 1;
+        }
+        return result;
+    }
+
+    Matrix& operator=(const Matrix& m) {
+        assert(m.N == this->N);
+        assert(m.M == this->M);
+        FOR(i, 0, N)
+            FOR(j, 0, M)
+                arr[i][j] = m.arr[i][j];
+        return *(this);
+    }
+
+    Matrix& operator=(const initializer_list<ll>& _l)
+    {
+        auto it = _l.begin();
+        FOR(i, 0, N)
+        {
+            FOR(j, 0, M)
+            {
+                if (it != _l.end())
+                    arr[i][j] = *(it++);
+                else break;
+            }
+        }
+        return *(this);
+    }
+
+    static Matrix identity(ll N)
+    {
+        Matrix _i(N);
+        FOR(i, 0, N)
+            FOR(j, 0, N)
+                if (i == j) _i.arr[i][j] = 1;
+        return _i;
+    }
+    friend ostream& operator<<(ostream&, const Matrix&);
+};
+
+inline ostream& operator << (ostream& out, const Matrix& m) {
+    FOR(i, 0, m.N) {
+        cout << '|';
+        FOR(j, 0, m.M) {
+            cout << m.arr[i][j];
+            (j != m.M - 1) ? cout << "   " : cout;
+        }
+        cout << '|' << endl;
+    }
+    return out;
+}
+ll Matrix::MOD = 1e9 + 7;  // MOD to be used in Matrix Exponentiation & Multiplication
