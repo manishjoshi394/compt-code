@@ -25,18 +25,18 @@ void _debug(istream_iterator<string> it, T first, Args... args) {
     cerr << ">> " << *it << " : " << first << endl; _debug(++it, args...);
 }
 template <typename T1, typename T2>
-inline ostream& operator << (ostream& out, pair<T1, T2>& p) {
+inline ostream& operator << (ostream& out, const pair<T1, T2>& p) {
     return out << "(" << p.F << ", " << p.S << ")";
 }
 template<typename T>
 inline ostream& operator << (ostream& out, const vector<T>& v) {
     if (v.empty()) return out << "[]";
-    else { out << '['; copy(ALL(v), ostream_iterator<T>(out, ", ")); return out << "\b\b]"; }
+    else { out << '['; for (auto& p : m) { out << p << ", "; } return out << "\b\b]"; }
 }
 template<typename T>
 inline ostream& operator << (ostream& out, const set<T>& s) {
     if (s.empty()) return out << "{}";
-    else { out << '{'; copy(ALL(s), ostream_iterator<T>(out, ", ")); return out << "\b\b}"; }
+    else { out << '{'; for (auto& p : m) { out << p << ", "; } return out << "\b\b}"; }
 }
 template<typename T>
 inline ostream& operator << (ostream& out, const unordered_set<T>& s) {
@@ -45,7 +45,7 @@ inline ostream& operator << (ostream& out, const unordered_set<T>& s) {
 template<typename T1, typename T2>
 inline ostream& operator << (ostream& out, const map<T1, T2>& m) {
     if (m.empty()) return out << "{}";
-    out << '{'; for (auto p : m) { out << p << ", "; } return out << "\b\b}";
+    out << '{'; for (auto& p : m) { out << p << ", "; } return out << "\b\b}";
 }
 template<typename T1, typename T2>
 inline ostream& operator << (ostream& out, const unordered_map<T1, T2>& m) {
