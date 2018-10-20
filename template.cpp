@@ -31,12 +31,12 @@ inline ostream& operator << (ostream& out, const pair<T1, T2>& p) {
 template<typename T>
 inline ostream& operator << (ostream& out, const vector<T>& v) {
     if (v.empty()) return out << "[]";
-    else { out << '['; for (auto& p : m) { out << p << ", "; } return out << "\b\b]"; }
+    else { out << '['; for (auto& e : v) { out << e << ", "; } return out << "\b\b]"; }
 }
 template<typename T>
 inline ostream& operator << (ostream& out, const set<T>& s) {
     if (s.empty()) return out << "{}";
-    else { out << '{'; for (auto& p : m) { out << p << ", "; } return out << "\b\b}"; }
+    else { out << '{'; for (auto& e : s) { out << e << ", "; } return out << "\b\b}"; }
 }
 template<typename T>
 inline ostream& operator << (ostream& out, const unordered_set<T>& s) {
