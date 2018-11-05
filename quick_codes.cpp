@@ -154,10 +154,10 @@ public :
     {
         if (v == this->v)
         {
-            return w;
+            return this->w;
         }
         else if (v == this->w){
-            return v;
+            return this->v;
         }
         else {
             cerr << "INVALID EDGE PASSED TO other(ll) IN CLASS Edge";
@@ -167,9 +167,16 @@ public :
     ll weight() {
         return m_weight;
     }
+    struct edge_comp
+    {
+        inline bool operator()(Edge a, Edge b)
+        {return a.weight() > b.weight();};
+    };
 };
 
-
+inline ostream& operator << (ostream& out, Edge e) {
+    return out << "(" << e.either() << " - " << e.other(e.either()) << ", " << e.weight() << ")";
+}
 
 
 
@@ -334,3 +341,25 @@ inline ostream& operator << (ostream& out, const Matrix& m) {
     return out;
 }
 ll Matrix::MOD = 1e9 + 7;  // MOD to be used in Matrix Exponentiation & Multiplication
+
+
+
+
+/********************************************************************
+* HASHING FOR STD::PAIR WITH UNORDERED_MAP @author : manishjoshi394
+*********************************************************************/
+template<typename T1, typename T2, typename... Args>
+inline ostream& operator << (ostream& out, const unordered_map<T1, T2, Args...>& m) {
+    return out << map<T1, T2>(ALL(m));
+}
+template<typename T, typename... Args>
+inline ostream& operator << (ostream& out, const unordered_set<T, Args...>& s) {
+    return out << set<T>(ALL(s));
+}
+struct pair_hash {
+    template<typename T1, typename T2>
+    inline size_t operator()(const pair<T1, T2>& p) const
+    {
+        return hash<T1>()(p.first) * 31 + hash<T2>()(p.second);
+    }
+};
