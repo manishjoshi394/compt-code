@@ -2,13 +2,14 @@
 #define SPEED ios_base::sync_with_stdio(false); cin.tie(NULL);
 #define FOR(i, a, b) for (ll i = a; i < b; ++i)
 #define RFOR(i, b, a) for (ll i = b; i >= a; --i)
-#define DEBUG(args...) { string _s = #args; replace(_s.begin(), _s.end(), ',', ' ');\
+#define ALL(x) x.begin(), x.end()
+#define DEBUG(args...) { string _s = #args; replace(ALL(_s), ' ', '');\
+replace(ALL(_s), ',', ' ');\
 stringstream _ss(_s); istream_iterator<string> _it(_ss); _debug(_it, args);}
 #define endl "\n"
 #define F first
 #define S second
 #define pb(x) push_back(x)
-#define ALL(x) x.begin(), x.end()
 #define mp(x, y) make_pair(x, y)
 
 using namespace std;
