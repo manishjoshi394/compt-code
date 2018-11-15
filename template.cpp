@@ -5,7 +5,7 @@
 #define FOR(i, a, b) for (ll i = a; i < b; ++i)
 #define RFOR(i, b, a) for (ll i = b; i >= a; --i)
 #define ALL(x) x.begin(), x.end()
-#define DEBUG(args...) { string _s = #args; replace(ALL(_s), ' ', '');\
+#define DEBUG(args...) { string _s = #args; replace(ALL(_s), ' ', '\0');\
 replace(ALL(_s), ',', ' ');\
 stringstream _ss(_s); istream_iterator<string> _it(_ss); _debug(_it, args);}
 #define endl "\n"
