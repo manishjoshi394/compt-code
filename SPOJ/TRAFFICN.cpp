@@ -1,18 +1,4 @@
-/***    ALLIZWEL - ALL IZZ WELL Solution
-**  https://www.spoj.com/problems/ALLIZWEL/ ***/
-/****
-* Try this case if you get WA:
-* 	
-*       3
-*	
-*	3 4
-*	AEW.
-*	LLIZ
-*	LL.Z
-*       	
-*       3 0
-*       0 1
-*/
+/*******https://www.spoj.com/problems/TRAFFICN/*********/
 
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -80,81 +66,110 @@ typedef pair<ll, ll> pll;
 typedef vector<pair<ll, ll>> vpll;
 typedef unordered_map<ll, ll> STll;
 /************************************** MAIN PROGRAM ********************************************/
+const int MAX = 200005;
+const ll INF = 1e18;
 
-const int MAX = 102;
+vpll adj[MAX];
+ll distTo[MAX];
 
-string grid[MAX];
-char path[10] = {'A', 'L', 'L', 'I', 'Z', 'Z', 'W', 'E', 'L', 'L'};
+priority_queue<pll, vpll, greater<pll>> pq;
 
-bool marked[MAX][MAX];
-
-int dR[] = {-1, -1, -1, 0, 0, 1, 1, 1};
-int dC[] = {-1, 0, 1, 1, -1, -1, 0, 1};
-ll n, m;
-
-
-bool dfs(int r, int c, int idx)
+/// returns corresponding vertex in the second layer
+int f(int v)
 {
-    assert(path[idx] == grid[r][c]);
-   //DEBUG(grid[r][c], idx)
-    marked[r][c] = true;
-    if (idx == 9) {
-        return 1;
-    }
+    return v + MAX / 2;
+}
 
-    bool isSuccessful = false;
-    FOR(k, 0, 8)
+int weightOf(int v, int w)
+{
+    for (auto y : adj[v])
     {
-        int x = r + dR[k];
-        int y = c + dC[k];
-        if (!(x < n && x >= 0 && y < m && y >= 0))
+        if (y.F == w)
         {
-            continue;
+            return y.S;
         }
-        if (marked[x][y]) continue;
-
-        if (grid[x][y] != path[idx + 1])    continue;
-
-        isSuccessful |= dfs(x, y, idx + 1);
     }
-    if (!isSuccessful) marked[r][c] = false;
-    return isSuccessful;
+}
+
+void relax(int v)
+{
+    for (auto p : adj[v])
+    {
+        int w = p.F;
+        int weight = p.S;
+
+        if (distTo[w] > distTo[v] + weight)
+        {
+            distTo[w] = distTo[v] + weight;
+
+            pq.push(mp(distTo[w], w));
+        }
+    }
+}
+
+void dijkstra(int s)
+{
+    FOR(i, 0, MAX)
+    {
+        distTo[i] = INF;
+    }
+
+    distTo[s] = 0;
+    pq.push(mp(0, s));
+
+    while (!pq.empty())
+    {
+        relax(pq.top().S);
+        pq.pop();
+    }
 }
 
 int main()
 {
-   // freopen("input.txt", "r", stdin);
+    //freopen("input.txt", "r", stdin);
     SPEED
     ll t;
     cin >> t;
     FOR(_, 0, t)
     {
-        memset(marked, false, sizeof(marked));
-        cin >> n >> m;
-        if (n == 0 || m == 0)
+        FOR(i, 0, MAX)
         {
-            cout << "NO" << endl;
+            adj[i].clear();
+        }
+        ll n, m, k, s, t;
+        cin >> n >> m >> k >> s >> t;
+        s--, t--;
+        FOR(i, 0, m)
+        {
+            ll u, v, w;
+            cin >> u >> v >> w;
+            u--, v--;
+            adj[u].pb(mp(v, w));
+            adj[f(u)].pb(mp(f(v), w));
+        }
+        FOR(i, 0, k)
+        {
+            ll u, v, weight;
+            cin >> u >> v >> weight;
+            u--, v--;
+            adj[u].pb(mp(f(v), weight));
+            adj[v].pb(mp(f(u), weight));
+        }
+        dijkstra(s);
+        if (distTo[f(t)] == distTo[t] && distTo[t] == INF)
+        {
+            cout << -1 << endl;
             continue;
         }
-        FOR(i, 0, n)
+
+        if (distTo[t] < distTo[f(t)])
         {
-            cin >> grid[i];
+            cout << distTo[t] << endl;
         }
-        bool ok = false;
-        FOR(i, 0, n)
+        else
         {
-            FOR(j, 0, m)
-            {
-                if (grid[i][j] == 'A')
-                {
-                    ok = dfs(i, j, 0);
-                    if (ok) break;
-                }
-            }
-            if (ok) break;
+            cout << distTo[f(t)] << endl;
         }
-        if (ok) cout << "YES" << endl;
-        else cout << "NO" << endl;
     }
 }
 /************************************** END OF PROGRAM ******************************************/
