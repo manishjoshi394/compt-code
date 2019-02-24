@@ -20,7 +20,6 @@ typedef unordered_map<ll, ll> STll;
 
 
 
-
 /***********************************************************
 * DFS                                @author: manishjoshi394
 ************************************************************/
@@ -188,16 +187,19 @@ class UnionFind
     ll *id;
     ll *size;
     ll m_count;
+    list<ll> *parts;
 public:
     UnionFind(ll n)
     {
         m_count = n;
         id = new ll[n];
         size = new ll[n];
+        parts = new list<ll>[n];
         FOR(i, 0, n)
         {
             id[i] = i;
             size[i] = 1;
+            parts[i].push_back(i);
         }
     }
     ll find(ll x)
@@ -225,10 +227,12 @@ public:
         {
             id[xRoot] = yRoot;
             size[yRoot] += size[xRoot];
+            parts[yRoot].splice(parts[yRoot].end(), parts[xRoot]);
         }
         else {
             id[yRoot] = xRoot;
             size[xRoot] += size[yRoot];
+            parts[xRoot].splice(parts[xRoot].end(), parts[yRoot]);
         }
         m_count--;
     }
