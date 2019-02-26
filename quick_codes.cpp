@@ -370,7 +370,7 @@ public:
             bit.push_back(0);
         }
     }
-    BIT(vector<T> arr) : BIT(arr.size()) {
+    BIT(const vector<T>& arr) : BIT(arr.size()) {
         n = arr.size();
         FOR(i, 0, n)
         {
