@@ -357,17 +357,18 @@ class BIT {
     vector<T> bit;
     int n;
     void validate(int idx) {
-        if (idx > n || idx < 0) {
+        if (idx >= n || idx < 0) {
             cerr << "Index out of range in BIT" << endl;
             assert(false);
         }
     }
 public:
-    BIT(int _n) {
+    BIT(int _n, int init = 0) {
         this->n = _n;
-        FOR(i, 0, n + 1)
+        bit.resize(n + 1);
+        FOR(i, 0, n)
         {
-            bit.push_back(0);
+            update(i, init);
         }
     }
     BIT(const vector<T>& arr) : BIT(arr.size()) {
@@ -379,6 +380,7 @@ public:
     }
     /// one-indexed
     T pref_sum(int len) {
+        validate(len - 1);
         T val = 0;
         while (len > 0) {
             val += bit[len];
@@ -388,6 +390,7 @@ public:
     }
     /// zero-indexed
     void update(int idx, T delta) {
+        validate(idx);
         idx++;
         while (idx <= n)
         {
