@@ -356,7 +356,7 @@ template<typename T>
 class BIT {
     vector<T> bit;
     int n;
-    void validate(int idx) {
+    void validate(int idx) const {
         if (idx >= n || idx < 0) {
             cerr << "Index out of range in BIT" << endl;
             assert(false);
@@ -379,8 +379,8 @@ public:
         }
     }
     /// one-indexed
-    T pref_sum(int len) {
-        validate(len - 1);
+    T pref_sum(int len) const {
+        validate((len > 0) ? len - 1 : 0);
         T val = 0;
         while (len > 0) {
             val += bit[len];
@@ -398,7 +398,18 @@ public:
             idx += (idx & -idx);
         }
     }
+    int size() const {
+        return bit.size();
+    }
 };
+template<typename T>
+inline ostream& operator << (ostream& out, const BIT<T>& bit) {
+    vector<T> vals;
+    for (int i = 1; i < bit.size(); ++i) {
+        vals.push_back(bit.pref_sum(i) - bit.pref_sum(i - 1));
+    }
+    return out << vals;
+}
 
 
 
