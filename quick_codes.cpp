@@ -352,9 +352,8 @@ ll Matrix::MOD = 1e9 + 7;  // MOD to be used in Matrix Exponentiation & Multipli
 /**********************************************************************************
 * BINARY INDEXED TREE/FENWICK TREE   @author: manishjoshi394
 **********************************************************************************/
-template<typename T>
 class BIT {
-    vector<T> bit;
+    vector<ll> bit;
     int n;
     void validate(int idx) const {
         if (idx >= n || idx < 0) {
@@ -363,7 +362,7 @@ class BIT {
         }
     }
 public:
-    BIT(int _n, int init = 0) {
+    BIT(int _n, ll init = 0) {
         this->n = _n;
         bit.resize(n + 1);
         FOR(i, 0, n)
@@ -371,6 +370,7 @@ public:
             update(i, init);
         }
     }
+    template<typename T>
     BIT(const vector<T>& arr) : BIT(arr.size()) {
         n = arr.size();
         FOR(i, 0, n)
@@ -379,9 +379,9 @@ public:
         }
     }
     /// one-indexed
-    T pref_sum(int len) const {
+    ll pref_sum(int len) const {
         validate((len > 0) ? len - 1 : 0);
-        T val = 0;
+        ll val = 0;
         while (len > 0) {
             val += bit[len];
             len -= (len & -len);
@@ -389,7 +389,7 @@ public:
         return val;
     }
     /// zero-indexed
-    void update(int idx, T delta) {
+    void update(int idx, ll delta) {
         validate(idx);
         idx++;
         while (idx <= n)
@@ -403,7 +403,7 @@ public:
     }
 };
 template<typename T>
-inline ostream& operator << (ostream& out, const BIT<T>& bit) {
+inline ostream& operator << (ostream& out, const BIT& bit) {
     vector<T> vals;
     for (int i = 1; i < bit.size(); ++i) {
         vals.push_back(bit.pref_sum(i) - bit.pref_sum(i - 1));
