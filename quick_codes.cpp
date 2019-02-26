@@ -349,6 +349,57 @@ ll Matrix::MOD = 1e9 + 7;  // MOD to be used in Matrix Exponentiation & Multipli
 
 
 
+/**********************************************************************************
+* BINARY INDEXED TREE/FENWICK TREE   @author: manishjoshi394
+**********************************************************************************/
+template<typename T>
+class BIT {
+    vector<T> bit;
+    int n;
+    void validate(int idx) {
+        if (idx > n || idx < 0) {
+            cerr << "Index out of range in BIT" << endl;
+            assert(false);
+        }
+    }
+public:
+    BIT(int _n) {
+        this->n = _n;
+        FOR(i, 0, n + 1)
+        {
+            bit.push_back(0);
+        }
+    }
+    BIT(vector<T> arr) : BIT(arr.size()) {
+        n = arr.size();
+        FOR(i, 0, n)
+        {
+            update(i, arr[i]);
+        }
+    }
+    /// one-indexed
+    T pref_sum(int len) {
+        T val = 0;
+        while (len > 0) {
+            val += bit[len];
+            len -= (len & -len);
+        }
+        return val;
+    }
+    /// zero-indexed
+    void update(int idx, T delta) {
+        idx++;
+        while (idx <= n)
+        {
+            bit[idx] += delta;
+            idx += (idx & -idx);
+        }
+    }
+};
+
+
+
+
 /********************************************************************
 * HASHING FOR STD::PAIR WITH UNORDERED_MAP @author : manishjoshi394
 *********************************************************************/
