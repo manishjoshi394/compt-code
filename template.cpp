@@ -72,3 +72,8 @@ int main()
 
 }
 /************************************** END OF PROGRAM ******************************************/
+/** Stuff you should look for:
+ * int overflow, array bounds
+ * special cases (n=1?), set/unordered_set TLE, mulitset/set error
+ * do something instead of nothing and stay organized
+ */
