@@ -350,7 +350,7 @@ ll Matrix::MOD = 1e9 + 7;  // MOD to be used in Matrix Exponentiation & Multipli
 
 
 /**********************************************************************************
-* BINARY INDEXED TREE/FENWICK TREE   @author: manishjoshi394
+* BINARY INDEXED TREE/FENWICK TREE WITH DEBUGGER  @author: manishjoshi394
 **********************************************************************************/
 class BIT {
     vector<ll> bit;
@@ -402,11 +402,89 @@ public:
         return bit.size();
     }
 };
-template<typename T>
 inline ostream& operator << (ostream& out, const BIT& bit) {
-    vector<T> vals;
+    vector<ll> vals;
     for (int i = 1; i < bit.size(); ++i) {
         vals.push_back(bit.pref_sum(i) - bit.pref_sum(i - 1));
+    }
+    return out << vals;
+}
+
+
+
+
+/**********************************************************************************
+* SEGMENT TREE WITH DEBUGGER (WITH SAMPLE OPERATION)   @author: manishjoshi394
+**********************************************************************************/
+class SegmentTree {
+    vector<ll> _tree;
+    int n;
+
+    int left(int v) const {
+        return 2 * v;
+    }
+    int right(int v) const {
+        return 2 * v + 1;
+    }
+    template<typename T>
+    void build(int v, int l, int r, const vector<T>& arr) {
+        if (l == r) {
+            _tree[v] = arr[l];
+        } else {
+            int mid = l + (r - l) / 2;
+            build(left(v), l, mid, arr);
+            build(right(v), mid + 1, r, arr);
+
+            _tree[v] = max(_tree[left(v)], _tree[right(v)]);
+        }
+    }
+    void update(int v, int l, int r, int pos, ll new_val) {
+        if (l == r) {
+            _tree[v] = new_val;
+        } else {
+            int mid = l + (r - l) / 2;
+
+            if (pos <= mid)
+                update(left(v), l, mid, pos, new_val);
+            else
+                update(right(v), mid + 1, r, pos, new_val);
+
+            _tree[v] = max(_tree[left(v)], _tree[right(v)]);
+        }
+    }
+    ll query(int v, int l, int r, int ql, int qr) const {
+        if (ql > qr)
+            return LLONG_MIN;
+        if (l == ql && r == qr) return _tree[v];
+        int mid = l + (r - l) / 2;
+        return max(query(left(v), l, mid, ql, min(mid, qr)),
+                   query(right(v), mid + 1, r, max(mid + 1, ql), qr));
+    }
+public:
+    template<typename T>
+    SegmentTree(const vector<T>& arr) {
+        n = arr.size();
+        _tree.resize(4 * n);
+        build(1, 0, n - 1, arr);
+    }
+    SegmentTree(int _n, ll _init = 0) : SegmentTree(vector<ll>(_n, _init)) {}
+
+    ll rmaxq(int l, int r) const {
+        return query(1, 0, n - 1, l, r);
+    }
+
+    void update(int pos, ll new_val) {
+        update(1, 0, n - 1, pos, new_val);
+    }
+
+    int size() const {
+        return n;
+    }
+};
+inline ostream& operator << (ostream& out, SegmentTree& SegTree) {
+    vector<ll> vals;
+    for (int i = 0; i < SegTree.size(); ++i) {
+        vals.push_back(SegTree.rmaxq(i, i));
     }
     return out << vals;
 }
