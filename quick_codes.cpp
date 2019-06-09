@@ -184,17 +184,16 @@ inline ostream& operator << (ostream& out, Edge e) {
 *************************************************************************/
 class UnionFind
 {
-    ll *id;
-    ll *size;
-    ll m_count;
-    list<ll> *parts;
+    vector<int> id, size;
+    int m_count, m_total;
+    vector<list<int>> parts;
 public:
-    UnionFind(ll n)
+    UnionFind(int n)
     {
-        m_count = n;
-        id = new ll[n];
-        size = new ll[n];
-        parts = new list<ll>[n];
+        m_count = m_total = n;
+        id = vector<int>(n);
+        size = vector<int>(n);
+        parts = vector<list<int>>(n);
         FOR(i, 0, n)
         {
             id[i] = i;
@@ -202,7 +201,7 @@ public:
             parts[i].push_back(i);
         }
     }
-    ll find(ll x)
+    int find(int x)
     {
         while(id[x] != x)
         {
@@ -211,14 +210,17 @@ public:
         }
         return x;
     }
-    ll count()
+    int count()
     {
         return m_count;
     }
-    void join(ll x, ll y)
+    int total() {
+        return m_total;
+    }
+    void join(int x, int y)
     {
-        ll xRoot = find(x);
-        ll yRoot = find(y);
+        int xRoot = find(x);
+        int yRoot = find(y);
         if (xRoot == yRoot)
             return;
 
@@ -236,11 +238,19 @@ public:
         }
         m_count--;
     }
-    bool connected(ll v, ll w)
+    bool connected(int v, int w)
     {
         return find(v) == find(w);
     }
 };
+
+inline ostream& operator << (ostream& out, UnionFind m) {
+    map<int, vector<int>> mp;
+    for (int i = 0; i < m.total(); ++i) {
+        mp[m.find(i)].push_back(i);
+    }
+    return out << mp;
+}
 
 
 
