@@ -97,12 +97,21 @@ ll dig(ll n)
     return ans;
 }
 
+string binary(ll num) {
+    string res = "";
+    while (num > 0) {
+        res += (num & 1) + '0';
+        num >>= 1;
+    }
+    reverse(ALL(res));
+    return res;
+}
 
 
 /***********************************************************
 * MODULAR ARITHMETIC                 @author: manishjoshi394
 ***********************************************************/
-const ll MOD = 1e9 + 9;
+const ll MOD = 1e9 + 7;
 
 ll myPow(ll base, ll exp, ll mod = MOD)
 {
@@ -285,11 +294,13 @@ public:
         {
             FOR(j, 0, that.M)
             {
+                ll sum = 0ll;
                 FOR(r, 0, this->M)
                 {
-                    product[i][j] += this->arr[i][r] * that.arr[r][j];
-                    product[i][j] %= Matrix::MOD;
+                    sum += this->arr[i][r] * that.arr[r][j] % MOD;
+                    if (sum >= MOD) sum -= MOD;
                 }
+                product[i][j] = sum;
             }
         }
         return product;
